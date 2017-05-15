@@ -1,0 +1,27 @@
+from distutils.core import setup
+setup(
+    name='dxfstructure',
+    version='0.0.2',
+    description='Structural engeenering dxf drawing',
+    long_description = open("README.txt").read(),
+    author='Lukasz Laba',
+    author_email='lukaszlab@o2.pl',
+    url='https://bitbucket.org/lukaszlaba/dxfstructure/wiki/Home',
+    packages=[  'dxfstructure', 
+                'dxfstructure.dxftest', 
+                'dxfstructure.pycore', 
+                'dxfstructure.qtui'],
+    package_data = {'': ['*.dxf']},
+    license = 'GNU General Public License (GPL)',
+    keywords = 'civil engineering ,structural engineering, concrete structures, steel structures',
+    classifiers=[
+        'Development Status :: 3 - Alpha',
+        'Environment :: X11 Applications :: Qt',
+        'Intended Audience :: End Users/Desktop',
+        'License :: OSI Approved :: GNU General Public License (GPL)',
+        'Operating System :: POSIX :: Linux',
+        'Operating System :: Microsoft :: Windows',
+        'Programming Language :: Python',
+        'Topic :: Scientific/Engineering',
+        ],
+    )
