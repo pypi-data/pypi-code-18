@@ -1,0 +1,56 @@
+# coding: utf-8
+from __future__ import absolute_import
+from __future__ import unicode_literals
+from __future__ import print_function
+
+import json
+import hashlib
+
+from django.contrib.staticfiles.management.commands import collectstatic
+from django.core.files.base import ContentFile
+
+
+class Command(collectstatic.Command):
+    filename = '.hashvalues_staticfiles.json'
+
+    def _save(self, path, fileobj, max_length=None):
+        self.cur_prefixed_path = path
+        return self.org_save(path, fileobj, max_length)
+
+    def __save(self, path, fileobj):
+        p = self.cur_prefixed_path
+        hash_value = hashlib.sha1(fileobj.read()).hexdigest()
+        fileobj.seek(0)
+        if self.prev_hash_map.get(p, ['', ''])[0] == hash_value:
+            self.hash_map[p] = self.prev_hash_map[p]
+            self.log("Skiping same hash '%s'" % path)
+            return self.hash_map[p][1]
+        return self._org_save(path, fileobj)
+
+    def delete_file(self, path, p, source_storage):
+        with source_storage.open(p, 'rb') as source_file:
+            h = hashlib.sha1(source_file.read())
+            hash_value = h.hexdigest()
+        if self.prev_hash_map.get(p, ['', ''])[0] == hash_value:
+            self.hash_map[p] = self.prev_hash_map[p]
+            return False
+        return super(Command, self).delete_file(path, p, source_storage)
+
+    def handle(self, **options):
+        self.org_save = self.storage.save
+        self._org_save = self.storage._save
+        if self.storage.exists(self.filename):
+            with self.storage.open(self.filename, 'rb') as fp:
+                self.prev_hash_map = json.loads(fp.read().decode('utf-8'))
+        else:
+            self.prev_hash_map = {}
+        self.hash_map = {}
+        self.storage.save = self._save
+        self.storage._save = self.__save
+
+        super(Command, self).handle(**options)
+
+        if self.storage.exists(self.filename):
+            self.storage.delete(self.filename)
+        contents = json.dumps(self.hash_map).encode('utf-8')
+        self.storage.save(self.filename, ContentFile(contents))
