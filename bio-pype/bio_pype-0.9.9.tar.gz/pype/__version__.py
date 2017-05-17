@@ -1,0 +1,5 @@
+VERSION = "0.9.9"
+DATE = "17 May 2017"
+AUTHOR = "Favero Francesco"
+MAIL = "francesco.favero@bric.ku.dk"
+WEBSITE = "http://bio-pype.readthedocs.io"
