@@ -1,0 +1,2 @@
+from telethon.tl.functions.bots.send_custom_request import SendCustomRequestRequest
+from telethon.tl.functions.bots.answer_webhook_json_query import AnswerWebhookJSONQueryRequest

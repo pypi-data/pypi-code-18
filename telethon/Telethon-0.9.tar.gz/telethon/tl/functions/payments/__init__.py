@@ -1,0 +1,6 @@
+from telethon.tl.functions.payments.get_payment_form import GetPaymentFormRequest
+from telethon.tl.functions.payments.get_payment_receipt import GetPaymentReceiptRequest
+from telethon.tl.functions.payments.validate_requested_info import ValidateRequestedInfoRequest
+from telethon.tl.functions.payments.send_payment_form import SendPaymentFormRequest
+from telethon.tl.functions.payments.get_saved_info import GetSavedInfoRequest
+from telethon.tl.functions.payments.clear_saved_info import ClearSavedInfoRequest
