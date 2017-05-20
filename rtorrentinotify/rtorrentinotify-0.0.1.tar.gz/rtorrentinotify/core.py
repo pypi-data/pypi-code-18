@@ -1,0 +1,52 @@
+"""core.py"""
+import asyncore
+import fnmatch
+import shutil
+import subprocess
+
+from helputils.core import log
+import pyinotify
+
+log = logging.getLogger("rtorrentinotify")
+conf_path = "/etc/rtorrentinotify.conf"
+conf = {}
+try:
+    with open(conf_path) as f:
+        code = compile(f.read(), conf_path, 'exec')
+        exec(code, conf)
+except Exception as err:
+    print("(E) Missing {0}. {1}".format(conf_path, err))
+    sys.exit(0)
+wm = pyinotify.WatchManager()
+mask = pyinotify.IN_CREATE | pyinotify.IN_MOVED_TO
+
+
+def suffix_filter(fn):
+
+    suffixes = ["*.torrent"]
+    for suffix in suffixes:
+        if fnmatch.fnmatch(fn, suffix):
+            return True
+    return False
+
+
+class EventHandler(pyinotify.ProcessEvent):
+
+    def __call__(self, event):
+        if suffix_filter(event.name):
+            super(EventHandler, self).__call__(event)
+
+    def process_IN_CREATE(self, event):
+        print("New torrent CREATED in gate_dir: %s" % event.pathname)
+        shutil.move(event.pathname, conf["rtorrent_watchdir"])
+
+    def process_IN_MOVED_TO(self, event):
+        print("New torrent MOVED to gate_dir: %s" % event.pathname)
+        shutil.move(event.pathname, conf["rtorrent_watchdir"])
+
+
+def clidoor():
+    handler = EventHandler()
+    notifier = pyinotify.Notifier(wm, handler)
+    wdd = wm.add_watch(conf["gate_dir"], mask, rec=True)
+    notifier.loop()
