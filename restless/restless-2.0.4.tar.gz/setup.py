@@ -1,0 +1,43 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+from setuptools import setup
+
+import restless
+
+
+setup(
+    name='restless',
+    version=restless.VERSION,
+    description='A lightweight REST miniframework for Python.',
+    author='Daniel Lindsley',
+    author_email='daniel@toastdriven.com',
+    url='http://github.com/toastdriven/restless/',
+    long_description=open('README.rst', 'r').read(),
+    packages=[
+        'restless',
+    ],
+    requires=[
+        'six(>=1.4.0)',
+    ],
+    install_requires=[
+        'six>=1.4.0',
+    ],
+    tests_require=[
+        'mock',
+        'tox',
+    ],
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Web Environment',
+        'Framework :: Django',
+        'Framework :: Flask',
+        'Framework :: Pyramid',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3',
+        'Topic :: Utilities'
+    ],
+)
