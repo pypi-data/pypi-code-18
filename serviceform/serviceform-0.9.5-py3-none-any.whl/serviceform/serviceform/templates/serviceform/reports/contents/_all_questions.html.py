@@ -1,0 +1,21 @@
+BBBB BBBB
+  XXXX gettext(u'Answers to questions') XXXXX
+  BBB B BB BBBBBBBBBBBBBBBBBBBBBB
+    XXXX XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX XXXXXX
+    XXXX
+      BBB BB BB BBBBBBBBBBBBBBBBB
+        BB BBBBBBBBB
+          XXXXXX XXXXXXBBB BBBBBBBBBBB BBBBBBBBBBBBBBBBBXXXXXXX
+          BB BBBBBBBBBBBBBBBBBBBBBBB BB BBBBBBBBB
+            BB BBBBBBBBB
+               gettext(u'Yes') 
+            BBBB
+               gettext(u'No') 
+            BBBBB
+          BBBB
+            FFFFFFFFFFFF
+          BBBBB
+        BBBBB
+      BBBBBB
+    XXXXX
+  BBBBBB
