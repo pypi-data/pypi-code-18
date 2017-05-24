@@ -1,0 +1,3 @@
+import wingdbstub
+
+print("hello")
