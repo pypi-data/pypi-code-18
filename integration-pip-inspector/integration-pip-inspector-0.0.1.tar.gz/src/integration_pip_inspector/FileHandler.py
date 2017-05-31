@@ -1,0 +1,21 @@
+import os
+
+TREE_POSTFIX = "_tree.txt"
+FLAT_POSTFIX = "_flat.txt"
+
+
+def get_file_path(file_name, output_path, extension=None):
+    file_path = output_path + "/"
+    file_path += file_name
+    if extension:
+        file_path += extension
+    return file_path
+
+
+def generate_file(data, file_name, output_path, file_extension=None):
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+    output_file_path = get_file_path(file_name, output_path, file_extension)
+    with open(output_file_path, "w+") as output_file:
+        output_file.write(data)
+    return output_file_path
