@@ -1,0 +1,109 @@
+# Copyright (C) 2016- Canonical Ltd
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+
+# -*- coding: utf-8 -*-
+import eventlet
+eventlet.monkey_patch()
+
+import logging
+import sys
+
+import os
+from six import exec_
+
+__author__ = 'Simon Davy'
+__email__ = 'simon.davy@canonical.com'
+__version__ = '0.9.5'
+
+__all__ = ['initialise', 'get_config', 'run']
+
+
+def initialise(env=os.environ):
+  config = get_config(env)
+  # deferred import so the metadata can be used
+  import talisker.logs
+  talisker.logs.configure(config)
+  # now that logging is set up, initialise other modules
+  # sentry first, so we can report any further errors in initialisation
+  # TODO: add deferred logging, so we can set up sentry first thing
+  import talisker.sentry
+  talisker.sentry.get_client()
+  import talisker.endpoints
+  talisker.endpoints.get_networks()
+  return config
+
+
+ACTIVE = {'true', '1', 'yes'}
+
+
+def get_config(env=os.environ):
+  """Load talisker config from environment"""
+  devel = env.get('DEVEL', '').lower() in ACTIVE
+  color = False
+  if devel:
+    if 'TALISKER_COLOR' in env:
+      color = env.get('TALISKER_COLOR', '').lower() in ACTIVE
+    else:
+      color = sys.stderr.isatty()
+  # log all queries in devel by default
+  default_query_time = '0' if devel else '-1'
+  return {
+    'devel': devel,
+    'color': color,
+    'debuglog': env.get('DEBUGLOG'),
+    'slowquery_threshold': int(
+      env.get('TALISKER_SLOWQUERY_THRESHOLD', default_query_time)),
+  }
+
+
+class RunException(Exception):
+  pass
+
+
+def run():
+  """Initialise Talisker then exec python script."""
+  initialise()
+  logger = logging.getLogger('talisker.run')
+
+  name = sys.argv[0]
+  if '__main__.py' in name:
+    # friendlier message
+    name = '{} -m talisker'.format(sys.executable)
+
+  extra = {}
+  try:
+    if len(sys.argv) < 2:
+      raise RunException('usage: {} <script>  ...'.format(name))
+
+    script = sys.argv[1]
+    extra['script'] = script
+    with open(script, 'rb') as f:
+      code = compile(f.read(), script, 'exec')
+
+    # pretend we just invoked python script.py by mimicing usual python
+    # behavior
+    sys.path.insert(0, os.path.dirname(script))
+    sys.argv = sys.argv[1:]
+    globs = {}
+    globs['__file__'] = script
+    globs['__name__'] = '__main__'
+    globs['__package__'] = None
+
+    exec_(code, globs, None)
+
+  except Exception:
+    logger.exception('Unhandled exception', extra=extra)
+    sys.exit(1)
