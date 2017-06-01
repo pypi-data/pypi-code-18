@@ -1,0 +1,61 @@
+from ppg_common.clients import (
+    BubblesClient, ButtercupClient, BlossomClient, PandoraClient
+)
+
+
+class BubblesProvider(object):
+
+    client = BubblesClient
+    service = 'bubbles'
+
+    def __init__(self, config):
+        self.config = config.get('services')
+
+    def __call__(self, *args, **kwargs):
+        data = self.config.get(self.service)
+        return self.client(**data)
+
+
+class ButtercupProvider(object):
+
+    client = ButtercupClient
+    service = 'buttercup'
+
+    def __init__(self, config):
+        self.config = config
+
+    def __call__(self, *args, **kwargs):
+        data = self.config.get(self.service)
+        return self.client(**data)
+
+
+class BlossomProvider(object):
+
+    client = BlossomClient
+    service = 'blossom'
+
+    def __init__(self, config):
+        self.config = config
+
+    def __call__(self, *args, **kwargs):
+        data = self.config.get(self.service)
+        return self.client(**data)
+
+
+class PandoraProvider(object):
+
+    client = PandoraClient
+    service = 'pandora'
+
+    def __init__(self, config):
+        self.config = config
+
+    def __call__(self, *args, **kwargs):
+        data = self.config.get(self.service)
+        return self.client(**data)
+
+
+def bind_clients(providers, config, binder):
+    for provider in providers:
+        provider_instance = provider(config)
+        binder.bind_to_provider(provider.client, provider_instance)
