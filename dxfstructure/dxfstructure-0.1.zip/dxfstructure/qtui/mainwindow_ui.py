@@ -1,0 +1,145 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'mainwindow.ui'
+#
+# Created by: PyQt4 UI code generator 4.11.4
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt4 import QtCore, QtGui
+
+try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
+
+class Ui_MainWindow(object):
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName(_fromUtf8("MainWindow"))
+        MainWindow.resize(658, 556)
+        MainWindow.setDocumentMode(False)
+        MainWindow.setTabShape(QtGui.QTabWidget.Rounded)
+        self.centralwidget = QtGui.QWidget(MainWindow)
+        self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
+        self.textBrowser = QtGui.QTextBrowser(self.centralwidget)
+        self.textBrowser.setGeometry(QtCore.QRect(10, 160, 631, 301))
+        self.textBrowser.setObjectName(_fromUtf8("textBrowser"))
+        self.progressBar = QtGui.QProgressBar(self.centralwidget)
+        self.progressBar.setEnabled(True)
+        self.progressBar.setGeometry(QtCore.QRect(530, 470, 118, 23))
+        self.progressBar.setProperty("value", 24)
+        self.progressBar.setTextVisible(True)
+        self.progressBar.setObjectName(_fromUtf8("progressBar"))
+        self.tabWidget = QtGui.QTabWidget(self.centralwidget)
+        self.tabWidget.setGeometry(QtCore.QRect(10, 10, 631, 141))
+        self.tabWidget.setObjectName(_fromUtf8("tabWidget"))
+        self.tab_2 = QtGui.QWidget()
+        self.tab_2.setObjectName(_fromUtf8("tab_2"))
+        self.pushButton_Check_and_save = QtGui.QPushButton(self.tab_2)
+        self.pushButton_Check_and_save.setGeometry(QtCore.QRect(120, 10, 161, 27))
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.pushButton_Check_and_save.setFont(font)
+        self.pushButton_Check_and_save.setObjectName(_fromUtf8("pushButton_Check_and_save"))
+        self.pushButton_Show_dep_and_save = QtGui.QPushButton(self.tab_2)
+        self.pushButton_Show_dep_and_save.setGeometry(QtCore.QRect(10, 40, 271, 27))
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.pushButton_Show_dep_and_save.setFont(font)
+        self.pushButton_Show_dep_and_save.setObjectName(_fromUtf8("pushButton_Show_dep_and_save"))
+        self.pushButton_Check = QtGui.QPushButton(self.tab_2)
+        self.pushButton_Check.setGeometry(QtCore.QRect(10, 10, 101, 27))
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.pushButton_Check.setFont(font)
+        self.pushButton_Check.setObjectName(_fromUtf8("pushButton_Check"))
+        self.pushButton_Process = QtGui.QPushButton(self.tab_2)
+        self.pushButton_Process.setGeometry(QtCore.QRect(310, 0, 301, 27))
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.pushButton_Process.setFont(font)
+        self.pushButton_Process.setObjectName(_fromUtf8("pushButton_Process"))
+        self.pushButton_Process_renum = QtGui.QPushButton(self.tab_2)
+        self.pushButton_Process_renum.setGeometry(QtCore.QRect(310, 30, 301, 27))
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.pushButton_Process_renum.setFont(font)
+        self.pushButton_Process_renum.setObjectName(_fromUtf8("pushButton_Process_renum"))
+        self.pushButton_Process_renum_schedules = QtGui.QPushButton(self.tab_2)
+        self.pushButton_Process_renum_schedules.setGeometry(QtCore.QRect(310, 60, 301, 27))
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.pushButton_Process_renum_schedules.setFont(font)
+        self.pushButton_Process_renum_schedules.setObjectName(_fromUtf8("pushButton_Process_renum_schedules"))
+        self.tabWidget.addTab(self.tab_2, _fromUtf8(""))
+        self.tab = QtGui.QWidget()
+        self.tab.setObjectName(_fromUtf8("tab"))
+        self.tabWidget.addTab(self.tab, _fromUtf8(""))
+        self.tab_3 = QtGui.QWidget()
+        self.tab_3.setObjectName(_fromUtf8("tab_3"))
+        self.pushButton_Inject_to_file = QtGui.QPushButton(self.tab_3)
+        self.pushButton_Inject_to_file.setGeometry(QtCore.QRect(10, 10, 221, 27))
+        self.pushButton_Inject_to_file.setObjectName(_fromUtf8("pushButton_Inject_to_file"))
+        self.tabWidget.addTab(self.tab_3, _fromUtf8(""))
+        MainWindow.setCentralWidget(self.centralwidget)
+        self.menubar = QtGui.QMenuBar(MainWindow)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 658, 28))
+        self.menubar.setObjectName(_fromUtf8("menubar"))
+        self.menuFile = QtGui.QMenu(self.menubar)
+        self.menuFile.setObjectName(_fromUtf8("menuFile"))
+        self.menuInfo = QtGui.QMenu(self.menubar)
+        self.menuInfo.setObjectName(_fromUtf8("menuInfo"))
+        MainWindow.setMenuBar(self.menubar)
+        self.statusbar = QtGui.QStatusBar(MainWindow)
+        self.statusbar.setObjectName(_fromUtf8("statusbar"))
+        MainWindow.setStatusBar(self.statusbar)
+        self.actionLoad_dxf = QtGui.QAction(MainWindow)
+        self.actionLoad_dxf.setObjectName(_fromUtf8("actionLoad_dxf"))
+        self.actionAbout = QtGui.QAction(MainWindow)
+        self.actionAbout.setObjectName(_fromUtf8("actionAbout"))
+        self.actionHelp = QtGui.QAction(MainWindow)
+        self.actionHelp.setObjectName(_fromUtf8("actionHelp"))
+        self.actionLicence = QtGui.QAction(MainWindow)
+        self.actionLicence.setObjectName(_fromUtf8("actionLicence"))
+        self.menuFile.addAction(self.actionLoad_dxf)
+        self.menuInfo.addAction(self.actionAbout)
+        self.menuInfo.addAction(self.actionLicence)
+        self.menuInfo.addSeparator()
+        self.menuInfo.addAction(self.actionHelp)
+        self.menubar.addAction(self.menuFile.menuAction())
+        self.menubar.addAction(self.menuInfo.menuAction())
+
+        self.retranslateUi(MainWindow)
+        self.tabWidget.setCurrentIndex(0)
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+    def retranslateUi(self, MainWindow):
+        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
+        self.pushButton_Check_and_save.setText(_translate("MainWindow", "Check and save", None))
+        self.pushButton_Show_dep_and_save.setText(_translate("MainWindow", "Show dependencies and save", None))
+        self.pushButton_Check.setText(_translate("MainWindow", "Check", None))
+        self.pushButton_Process.setText(_translate("MainWindow", "Process data and save", None))
+        self.pushButton_Process_renum.setText(_translate("MainWindow", "Process data, renumerate and save", None))
+        self.pushButton_Process_renum_schedules.setText(_translate("MainWindow", "Process data, renumerate, schedules and save", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Concrete Model", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Steel Model", None))
+        self.pushButton_Inject_to_file.setText(_translate("MainWindow", "Inject DS system to file", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), _translate("MainWindow", "DS system", None))
+        self.menuFile.setTitle(_translate("MainWindow", "Fi&le", None))
+        self.menuInfo.setTitle(_translate("MainWindow", "&Info", None))
+        self.actionLoad_dxf.setText(_translate("MainWindow", "&Load dxf ", None))
+        self.actionLoad_dxf.setShortcut(_translate("MainWindow", "Ctrl+O", None))
+        self.actionAbout.setText(_translate("MainWindow", "&About", None))
+        self.actionHelp.setText(_translate("MainWindow", "&Help", None))
+        self.actionHelp.setShortcut(_translate("MainWindow", "F1", None))
+        self.actionLicence.setText(_translate("MainWindow", "&License", None))
+
