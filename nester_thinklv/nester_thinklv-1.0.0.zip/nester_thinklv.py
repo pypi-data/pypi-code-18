@@ -1,0 +1,15 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+def print_lol(the_list,indent = False,level = 0):
+    for each_item in the_list:
+        if isinstance(each_item,list):
+            print_lol(each_item,indent,level+1)
+        else:
+            for tab in range(level):
+                print("\t",end="")
+            print(each_item)
+            
+movies = [1,2,3,[4,5,[6,7,[8,9]]]]
+
+print_lol(movies,True)
