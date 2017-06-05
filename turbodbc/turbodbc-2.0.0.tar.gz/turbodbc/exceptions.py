@@ -1,0 +1,52 @@
+from __future__ import absolute_import
+
+from functools import wraps
+
+from turbodbc_intern import Error as InternError
+
+
+# Python 2/3 compatibility
+try:
+    from exceptions import StandardError as _BaseError
+except ImportError:
+    _BaseError = Exception
+
+
+class Error(_BaseError):
+    """
+    turbodbc's basic error class
+    """
+    pass
+
+
+class InterfaceError(Error):
+    """
+    An error that is raised whenever you use turbodbc incorrectly
+    """
+    pass
+
+
+class DatabaseError(Error):
+    """
+    An error that is raised when the database encounters an error while processing
+    your commands and queries
+    """
+    pass 
+
+
+class ParameterError(Error):
+    """
+    An error that is raised when you use connection arguments that are supposed
+    to be mutually exclusive
+    """
+    pass
+
+
+def translate_exceptions(f):
+    @wraps(f)
+    def wrapper(*args, **kwds):
+        try:
+            return f(*args, **kwds)
+        except InternError as e:
+            raise DatabaseError(str(e))
+    return wrapper
