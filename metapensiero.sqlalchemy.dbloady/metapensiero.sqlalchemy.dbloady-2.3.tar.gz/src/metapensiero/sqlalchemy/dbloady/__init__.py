@@ -1,0 +1,102 @@
+# -*- coding: utf-8 -*-
+# :Project:   metapensiero.sqlalchemy.dbloady -- YAML based data loader
+# :Created:   mer 10 feb 2010 14:35:05 CET
+# :Author:    Lele Gaifax <lele@metapensiero.it>
+# :License:   GNU General Public License version 3 or later
+# :Copyright: © 2010-2017 Lele Gaifax
+#
+
+from os.path import join, normpath
+
+from ruamel import yaml
+
+
+def resolve_class_name(classname):
+    """Import a particular Python class given its full dotted name.
+
+    :param classname: full dotted name of the class,
+                      such as "package.module.ClassName"
+    :rtype: the Python class
+    """
+
+    modulename, _, classname = classname.rpartition('.')
+    module = __import__(modulename, fromlist=[classname])
+    return getattr(module, classname)
+
+
+class File(yaml.YAMLObject):
+    """Facility to read the content of an external file.
+
+    The value of field may be loaded from an external file, given its pathname which is
+    interpreted as relative to the position of the YAML file currently loading::
+
+        - entity: cpi.models.Document
+          key: filename
+          data:
+            - filename: image.gif
+              content: !File {path: ../image.gif}
+
+    Alternatively, the content may be inline, possibly compressed::
+
+        - entity: cpi.models.Document
+          key: filename
+          data:
+            - filename: image.gif
+              content: !File
+                compressor: lzma
+                content: !!binary |
+                  /Td6WFoAAATm1rRGAgAhA...
+    """
+
+    yaml_tag = '!File'
+
+    basedir = None
+
+    def __init__(self, path=None, content=None, compressor=None):
+        self.path = path
+        self.content = content
+        self.compressor = compressor
+
+    def read(self):
+        # PyYAML does not execute the __init__ method
+        path = getattr(self, 'path', None)
+        if path is None:
+            content = getattr(self, 'content', None)
+            if content is None:
+                raise RuntimeError('The !File object requires either a "path"'
+                                   ' or a "content" argument')
+            compressor = getattr(self, 'compressor', None)
+            if compressor is not None:
+                if compressor == 'lzma':
+                    from lzma import decompress
+                elif compressor == 'gzip':
+                    from gzip import decompress
+                else:
+                    raise RuntimeError('Unsupported compressor: %r' % compressor)
+                content = decompress(content)
+        else:
+            fullpath = normpath(join(self.basedir, path))
+            content = open(fullpath, 'rb').read()
+        return content
+
+
+class SQL(yaml.YAMLObject):
+    """Raw SQL statement."""
+
+    yaml_tag = '!SQL'
+
+    def __init__(self, query, params=None):
+        self.query = query
+        self.params = params
+
+    def fetch(self, session):
+        # PyYAML does not execute the __init__ method
+        try:
+            query = self.query
+        except AttributeError:
+            raise RuntimeError('The !SQL object requires a "query" argument')
+        try:
+            params = self.params
+        except AttributeError:
+            params = None
+        return session.scalar(query, params)
