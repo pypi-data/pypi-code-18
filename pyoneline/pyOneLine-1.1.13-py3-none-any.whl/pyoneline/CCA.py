@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Jun  7 15:46:49 2017
+
+@author: zhoumingzhen
+"""
+import json
+import requests
+from math import * 
+import time
+    
+def _BdCMer(BDcoor):
+    """
+    mercator = {"x":12940638.98, "y":4838339.82} 
+    lonlat = {} 
+    lonlat['x'] - mercator['x']/ 20037508.3427892 * 180 = 0
+    lonlat['y'] - 180 / math.pi * (2 * math.atan(math.exp((mercator['y']/ 20037508.3427892 * 180) * math.pi / 180)) - math.pi / 2) = 0
+    print (lonlat)
+    """
+    Merx = BDcoor[0]*20037508.34/180
+    Mery = log(tan((90 + BDcoor[1])*pi/360))/(pi/180)
+    Mery = Mery*20037508.34/180
+    return Merx,Mery
+def addr(BDcoor):
+    Merx,Mery = _BdCMer(BDcoor)
+    param0 = str(Merx) + ',' + str(Mery)
+    timeStamp = str(time.time()).replace(".", "")[:13]
+    params = {
+            "newmap" : "1",
+            "reqflag" : "pcmap",
+            "biz" : "1",
+            "from" : "webmap",
+            "da_par" : "direct",
+            "pcevaname" : "pc4.1",
+            "qt" : "s",
+            "from" : "webmap",
+            "da_src":"searchBox.button",
+            "wd" : "",
+            "c" : "",
+            "src" : "0",
+            "wd2" : "",
+            "l" : "18",
+            "b" : "("+param0+";"+param0+")",
+            "from":"webmap",
+            "biz_forward":"{%22scaler%22:1,%22styles%22:%22pl%22}",
+            "sug_forward":"",
+            "tn":"B_NORMAL_MAP",
+            "nn":"0",
+            "u_loc" : "12549302.061272,4849237.767971",
+            "ie" : "utf-8",
+            "t" : timeStamp
+            }
+        
+    ajaxquery="http://map.baidu.com/"
+    response=requests.get(ajaxquery,params=params)
+    result = json.loads(response.text)    
+    #print(result)
+    current_city = result['current_city']
+    return (current_city['up_province_name'],current_city['name'])
+                                                                                                                                                               
+
+if __name__ == '__main__':
+    BDcoor = (12.246473,56.000835)
+    print(addr(BDcoor))
