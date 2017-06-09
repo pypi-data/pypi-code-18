@@ -1,0 +1,123 @@
+import os
+from django.shortcuts import get_object_or_404, render, redirect
+from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from django.core.mail import EmailMessage
+from django.contrib.auth.models import User
+from django.forms.models import model_to_dict
+from django.urls import reverse
+
+import requests
+import json
+import keen
+
+from jobs.models import JobSubmitted, ClientProfile
+from jobs.forms import JobSubmissionForm, ProfileSubmissionForm, CreateUserForm
+
+auth = (settings.SERVICEM8_EMAIL, settings.SERVICEM8_PASSWORD)
+
+keen.project_id = "588a5ec48db53dfda8a84a7b"
+keen.write_key = "0C088A7C13E77A1E10453558A17142E76AE8B6C2CA7D23749C414A427272D7540AAB834FDAFFD3BD03E48467622268BEDB516670DBA9B90368E60B1211D8648838FD7CDD882BFB0BA7C8A6C8C768397A952AF0203AF6602E9240E9D0DC6F09DE"
+
+
+def add_job_contact(first_name, last_name, email, phone, job_id, auth):
+    url = "https://api.servicem8.com/api_1.0/JobContact.json"
+    payload = {
+        "first":first_name,
+        "last":last_name,
+        "email":email,
+        "phone":phone,
+        "job_uuid":job_id,
+        "type":"JOB",
+        "is_primary_contact":1,
+    }
+    r = requests.post(url, data=payload, auth=auth)
+    return;
+
+@login_required
+def submit_job(request):
+    if request.method == 'POST':
+        form = JobSubmissionForm(request.POST)
+        if form.is_valid():
+            first_name = "{}".format(request.user.first_name)
+            last_name = "{}".format(request.user.last_name)
+            email = "{}".format(request.user.email)
+            phone = "{}".format(request.user.clientprofile.phone)
+            job_addr = "{0}, {1}, {2} {3}".format(request.user.clientprofile.street, request.user.clientprofile.city, request.user.clientprofile.state, request.user.clientprofile.zip_code)
+            job_desc = form.cleaned_data['job_description']
+            company = request.user.username
+            url = "https://api.servicem8.com/api_1.0/Job.json"
+            payload = {
+                "status":"Quote",
+                "job_address":job_addr,
+                "job_description":"{}".format(job_desc),
+                "company_id":company,
+            }
+            r = requests.post(url, data=payload, auth=auth)
+            job_id = "{}".format(r.headers['x-record-uuid'])
+            j = JobSubmitted(job_id=job_id, job_description=job_desc, user=request.user)
+            j.save()
+            add_job_contact(first_name=first_name, last_name=last_name, email=email, phone=phone, auth=auth, job_id=job_id)
+            keen.add_event("ServiceM8 Jobs", {
+                "Admin Email": settings.SERVICEM8_EMAIL,
+                "Customer": "{0} {1}".format(first_name, last_name),
+                "Job ID": job_id
+            })
+            return HttpResponseRedirect('/')
+    else:
+        form = JobSubmissionForm()
+    return render(request, 'jobs/submit.html', {'form':form})
+
+@login_required
+def get_jobs(request):
+    jobs = JobSubmitted.objects.filter(user_id=request.user.id)
+    return render(request, 'jobs/index.html', {'jobs': jobs})
+
+@login_required
+def get_job_detail(request, jobsubmitted_id):
+    j = get_object_or_404(JobSubmitted, user_id=request.user.id, pk=jobsubmitted_id)
+    url = "https://api.servicem8.com/api_1.0/Job/{}.json".format(j.job_id)
+    r = requests.get(url, auth=auth)
+    job = r.json()
+    return render(request, "jobs/details.html", {'job': job, 'j':j})
+
+@login_required
+def get_job_note(request, jobsubmitted_id):
+    n = get_object_or_404(JobSubmitted, user_id=request.user.id, pk=jobsubmitted_id)
+    url = "https://api.servicem8.com/api_1.0/Note.json"
+    r = requests.get(url, auth=auth)
+    notes = r.json()
+    return render(request, "jobs/notes.html", {'notes': notes, 'n': n})
+
+@login_required
+def get_job_attachment(request, jobsubmitted_id):
+    a = get_object_or_404(JobSubmitted, user_id=request.user.id, pk=jobsubmitted_id)
+    url = "https://api.servicem8.com/api_1.0/Attachment.json"
+    r = requests.get(url, auth=auth)
+    attachments = r.json()
+    return render(request, "jobs/attachments.html", {'attachments': attachments, 'a': a})
+
+@login_required
+def edit_profile(request):
+    profile, created = ClientProfile.objects.get_or_create(user_id=request.user.id)
+    if request.method == 'POST':
+        form = ProfileSubmissionForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('jobs:list'))
+    else:
+        profile_dict = model_to_dict(profile)
+        form = ProfileSubmissionForm(profile_dict)
+        return render(request, 'jobs/profile.html', {'form': form})
+
+@login_required
+def create_new_user(request):
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('jobs:new-user'))
+    else:
+        form = CreateUserForm()
+        return render(request, 'jobs/create_user.html', {'form': form})
