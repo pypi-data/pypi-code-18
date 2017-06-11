@@ -1,0 +1,10 @@
+__version__ = "0.1.6"
+__git_commiter_name__ = "Guy Rozendorn"
+__git_commiter_email__ = "guy@rzn.co.il"
+__git_branch__ = u'(HEAD detached at v0.1.6)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = 'a6c7ef08fcf20ae5cd58179d75062cc0e9c3dd5a'
+__git_head_subject__ = u'Finished Release v0.1.6'
+__git_head_message__ = u'* develop:\n  HOSTDEV-2636 fixing Windows'
+__git_dirty_diff__ = u''
