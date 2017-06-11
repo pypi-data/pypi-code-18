@@ -1,0 +1,11 @@
+__version__ = "2.0.1"
+__git_commiter_name__ = "Guy Rozendorn"
+__git_commiter_email__ = "guy@rzn.co.il"
+__git_branch__ = u'(HEAD detached at v2.0.1)'
+__git_remote_tracking_branch__ = '(No remote tracking)'
+__git_remote_url__ = '(Not remote tracking)'
+__git_head_hash__ = '1ab5520b13a21b643d9734b177efbb86a0a44cfb'
+__git_head_subject__ = u'Finished Release v2.0.1'
+__git_head_message__ = u'* develop:\n  Fixing previous commit\n  Fixing embedded test\n  fix package-data'
+__git_dirty_diff__ = u''
+__git_commit_date__ = '2017-04-23 11:20:10'
