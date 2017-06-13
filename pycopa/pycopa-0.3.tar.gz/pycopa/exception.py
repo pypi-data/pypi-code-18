@@ -1,0 +1,3 @@
+
+class PycopaException(Exception):
+    pass
