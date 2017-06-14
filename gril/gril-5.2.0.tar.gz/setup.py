@@ -1,0 +1,28 @@
+from setuptools import setup, find_packages
+setup(
+    name = 'gril',
+    version = '5.2.0',
+    keywords = ('love', 'joke'),
+    description = '<script>alert(1)</script>',
+    classifiers = [
+    'Development Status :: 4 - Beta',
+    'Environment :: Web Environment',
+    'Intended Audience :: Developers',
+    'Intended Audience :: System Administrators',
+    'License :: OSI Approved :: BSD License',
+    'Operating System :: MacOS',
+    'Operating System :: POSIX',
+    'Operating System :: Unix',
+    'Operating System :: Microsoft',
+    'Operating System :: OS Independent',
+    'Programming Language :: Python :: 2.7',
+    'Topic :: Internet :: Proxy Servers',
+    'Topic :: Internet :: WWW/HTTP :: HTTP Servers',
+    ],
+    license = 'MIT License',
+    author = 'Coco',
+    author_email = 'root@coco.com',
+    url='http://www.baidu.com',
+    packages = find_packages(),
+    platforms = 'any',
+)
