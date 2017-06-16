@@ -1,0 +1,2 @@
+""" Hypershot Image Handling.
+"""
