@@ -1,0 +1,67 @@
+#
+# Copyright (C) 2016-2017 Mattia Basaglia
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+import sys
+import tty
+import termios
+import contextlib
+
+
+class RawInput(object):
+    def __init__(self, read_ansi=True, raise_specials=True):
+        self.file = sys.stdin
+        self.fileno = self.file.fileno()
+        self.attrs = None
+        self.when = termios.TCSAFLUSH
+        self.read_ansi = True
+        self.raise_specials = True
+
+    def get(self):
+        ch = self.file.read(1)
+        code = ord(ch)
+        if code == 4 and self.raise_specials:
+            raise EOFError()
+        if  code == 3 and self.raise_specials:
+            raise KeyboardInterrupt()
+        if code == 0x1b and self.read_ansi:
+            with self.nonblocking():
+                ch += self.file.readline()
+        return ch
+
+    def __iter__(self):
+        while True:
+            yield self.get()
+
+    def __enter__(self):
+        if self.attrs is None:
+            self.attrs = termios.tcgetattr(self.fileno)
+            tty.setraw(self.fileno, self.when)
+        return self
+
+    def __exit__(self, *a, **k):
+        if self.attrs:
+            termios.tcsetattr(self.fileno, self.when, self.attrs)
+
+    @contextlib.contextmanager
+    def nonblocking(self):
+        mode = termios.tcgetattr(self.fileno)
+        try:
+            mode[tty.CC][termios.VMIN] = 0
+            termios.tcsetattr(sys.stdin, self.when, mode)
+            yield
+        finally:
+            mode[tty.CC][termios.VMIN] = 1
+            termios.tcsetattr(sys.stdin, self.when, mode)
