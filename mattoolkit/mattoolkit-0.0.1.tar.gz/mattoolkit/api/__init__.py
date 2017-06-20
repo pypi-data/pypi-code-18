@@ -1,0 +1,29 @@
+API_ROOT = 'https://mtk.aves.io/api/v1.0'
+
+class MTKAPIError(Exception):
+    def __init__(self, code, detail):
+        self.code = code
+        self.detail = detail
+
+from .api import api
+from .structure import StructureResourceList, StructureResourceItem
+from .calculation import CalculationResourceList, CalculationResourceItem
+from .cluster import (
+    ClusterResourceList, ClusterResourceItem,
+    ClusterJobResourceList, ClusterJobResourceItem
+)
+
+
+resource_mapping = {
+    'structures': {'list':StructureResourceList, 'item':StructureResourceItem},
+    'calculations': {'list':CalculationResourceList, 'item':CalculationResourceItem},
+    'clusters': {'list':ClusterResourceList, 'item': ClusterResourceItem},
+    'clusterjobs': {'list':ClusterJobResourceList, 'item': ClusterJobResourceItem}
+}
+
+def resource_representation(resource, uuid=None):
+    if resource not in resource_mapping:
+        raise ValueError('Resource %s not available' % resource)
+    if uuid:
+        return resource_mapping[resource]['item'](uuid)
+    return resource_mapping[resource]['list']()
