@@ -1,0 +1,2 @@
+def poof():
+    return "Salam"
