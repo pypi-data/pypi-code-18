@@ -1,0 +1,18 @@
+# Number of passes over the data
+passes = 3
+# Sparsity of document-topic prior
+alpha = 'auto'
+# prior over topic word distribution
+eta = 'auto'
+# number of iterations per pass
+iterations = 100
+# --
+gamma_threshold = 0.001
+# controls filtering the topics returned for a document (bow)
+minimum_probability = 0.01
+# seeding
+random_state = 1
+# --
+minimum_phi_value = 0.01
+# evaluation of perplixity
+eval_every = None
