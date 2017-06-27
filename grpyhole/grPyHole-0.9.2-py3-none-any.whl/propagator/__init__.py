@@ -1,0 +1,28 @@
+#   Copyright 2015 - 2017 Alexander Wittig, Jai Grover
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+
+# import various predefined propagators from subpackages into the package namespace
+from .propagator import *
+from .cpu import *
+
+# What is to be imported by "from propagator import *"
+__all__ = ["Propagator", "CPU", "SphericalCPU", "CartesianCPU"]
+
+# also try to import OpenCL propagator, but only if pyopencl is found
+try:
+    from .gpu import *
+except ImportError:
+    pass
+else:
+    __all__ = __all__+["GPU", "SphericalGPU", "CartesianGPU"]
