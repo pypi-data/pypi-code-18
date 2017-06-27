@@ -1,0 +1,6 @@
+# -*- coding:utf-8 -*-
+ONE_MINUTE = 60
+ONE_HOUR = 3600
+ONE_DAY = 86400
+ONE_WEEK = 86400 * 7
+ONE_MONTH = 86400 * 30
