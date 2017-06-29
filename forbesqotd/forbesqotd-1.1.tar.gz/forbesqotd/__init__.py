@@ -1,0 +1,1 @@
+from qotd import forbes
