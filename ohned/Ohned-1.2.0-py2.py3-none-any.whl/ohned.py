@@ -1,0 +1,2 @@
+raise RuntimeError("LOL WHY U LET ME INSTALL USIN THE BOT WTF ")
+raise RuntimeError("LOL WHY U LET ME INSTALL USIN THE BOT WTF ")
