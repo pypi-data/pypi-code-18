@@ -1,0 +1,27 @@
+from setuptools import setup
+from logReader.__main__ import __version__, __author__, __email__, __license__
+
+setup(name='logReader',
+      version=__version__,
+      description='PyQt5 programm for parse and reading any log file.',
+      url='https://github.com/MyrikLD/logReader',
+      author=__author__,
+      author_email=__email__,
+      license=__license__,
+      packages=['logReader'],
+      install_requires=['python-dateutil'],
+      entry_points={'console_scripts': ['logreader = logReader.__main__:main']},
+      classifiers=['Intended Audience :: Developers',
+                   'Natural Language :: English',
+                   'Programming Language :: Python',
+                   'Programming Language :: Python :: 2',
+                   'Programming Language :: Python :: 2.7',
+                   'Programming Language :: Python :: 3',
+                   'Programming Language :: Python :: 3.3',
+                   'Programming Language :: Python :: 3.4',
+                   'Programming Language :: Python :: 3.5',
+                   'Programming Language :: Python :: 3.6',
+                   'Topic :: Utilities'],
+      data_files=[('UI', ['logReader/ui.ui', 'logReader/about.ui']), ('config', ['logReader/default.yaml'])],
+      include_package_data=True,
+      zip_safe=False)
